@@ -1,9 +1,15 @@
 import express from 'express'
-import { loginController } from '../controllers/authControllers.js'
-import { loginValidation } from '../middlewares/authValidation.js'
+import db from '../config/database.js'
+import { loginController, signUpControler } from '../controllers/authControllers.js'
+import { checkLogin, loginValidation, signUpValidate } from '../middlewares/authValidation.js'
 
 const authRoutes = express.Router()
 
-authRoutes.post('/', loginValidation, loginController)
+authRoutes.get('/', async(req, res) => {
+    const users = await db.collection("Accounts").find({}).toArray()
+    return res.send(users)
+})
+authRoutes.post('/', loginValidation, checkLogin, loginController)
+authRoutes.post('/cadastro', signUpValidate, signUpControler)
 
 export default authRoutes
