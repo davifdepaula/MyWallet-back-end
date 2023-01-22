@@ -1,9 +1,10 @@
 import express from 'express'
-import { deposit } from '../controllers/accountControllers.js'
-import { depositValidation, tokenValidation } from '../middlewares/accountValidation.js'
+import { deposit, withdraw } from '../controllers/accountControllers.js'
+import { withdrawValidation, financialMovementValidation, tokenValidation } from '../middlewares/accountValidation.js'
 
 const accountRoutes = express.Router()
 
-accountRoutes.post("/nova-entrada", tokenValidation, depositValidation, deposit)
+accountRoutes.post("/nova-entrada", tokenValidation, financialMovementValidation, deposit)
+accountRoutes.post("/nova-saida", tokenValidation, withdrawValidation, financialMovementValidation, withdraw)
 
 export default accountRoutes

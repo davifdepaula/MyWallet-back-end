@@ -15,15 +15,27 @@ const tokenValidation = async(req, res, next) => {
     }
 }
 
-const depositValidation = (req, res, next) => {
+const financialMovementValidation = (req, res, next) => {
     const validation = depositSchema.validate(req.body)
-
     if(validation.error) return res.status(400).send(`${validation.error.message}`)
     next()
 }
 
+const withdrawValidation = async(req, res, next) =>{
+    const {id} = res.locals.session
+    const {value} = req.body
+    try{
+        const account = await db.collection("Accounts").findOne({_id: id})
+        if(account.saldo - Number(value) < 0) return res.sendStatus(400)
+        next()
+    }
+    catch{
+        res.status(500)
+    }
+}
 
 export{
     tokenValidation,
-    depositValidation
+    withdrawValidation,
+    financialMovementValidation
 }
