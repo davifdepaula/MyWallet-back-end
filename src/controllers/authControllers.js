@@ -15,9 +15,12 @@ const loginController = async(req, res) => {
 }
 const signUpControler = async(req, res) => {
     const {name, email, password} = req.body
+    const cashIn = [], cashOut = []
+
+
     try{
         const passwordHash = bcrypt.hashSync(password, 10)
-        await db.collection("Accounts").insertOne({name, email, password: passwordHash})
+        await db.collection("Accounts").insertOne({name, email, password: passwordHash, cashIn, cashOut, saldo: 0})
         return res.sendStatus(201)
     }catch(error) {
         return res.sendStatus(500)
