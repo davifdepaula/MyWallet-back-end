@@ -5,10 +5,6 @@ import { checkLogin, checkSignUp, loginValidation, signUpValidate } from '../mid
 
 const authRoutes = express.Router()
 
-authRoutes.get('/', async(req, res) => {
-    const users = await db.collection("Accounts").find({}).toArray()
-    return res.send(users)
-})
 authRoutes.post('/', loginValidation, checkLogin, loginController)
 authRoutes.post('/cadastro', checkSignUp, signUpValidate, signUpControler)
 

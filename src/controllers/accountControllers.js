@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import db from "../config/database.js"
 
-const deposit = async(req, res, next) => {
+const deposit = async(req, res) => {
     const {id} = res.locals.session
     const {value, description} = req.body
     try{
@@ -16,7 +16,7 @@ const deposit = async(req, res, next) => {
     }
 }
 
-const withdraw = async(req, res, next) => {
+const withdraw = async(req, res) => {
     const {id} = res.locals.session
     const {value, description} = req.body
     try{
@@ -31,9 +31,21 @@ const withdraw = async(req, res, next) => {
     }
 }
 
+const getInfomation = async(req, res) => {
+    const {id} = res.locals.session
+    const user = await db.collection("Accounts").findOne({_id: id})
 
+    return res.send(
+        {id: user._id, 
+        name: user.name, 
+        cashIn: user.cashIn, 
+        cashOut: user.cashOut, 
+        saldo: user.saldo 
+    })
+}
 
 export {
     deposit,
-    withdraw
+    withdraw,
+    getInfomation
 }
