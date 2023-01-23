@@ -33,15 +33,18 @@ const withdraw = async(req, res) => {
 
 const getInfomation = async(req, res) => {
     const {id} = res.locals.session
-    const user = await db.collection("Accounts").findOne({_id: id})
-
-    return res.send(
-        {id: user._id, 
-        name: user.name, 
-        cashIn: user.cashIn, 
-        cashOut: user.cashOut, 
-        saldo: user.saldo 
-    })
+    try{
+        const user = await db.collection("Accounts").findOne({_id: id})
+        return res.status(200).send(
+            {id: user._id, 
+            name: user.name, 
+            cashIn: user.cashIn, 
+            cashOut: user.cashOut, 
+            saldo: user.saldo 
+        })
+    }catch{
+        return res.sendStatus(500)
+    }
 }
 
 export {

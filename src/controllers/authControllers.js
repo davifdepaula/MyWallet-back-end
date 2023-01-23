@@ -5,7 +5,7 @@ import db from '../config/database.js'
 const loginController = async(req, res) => {
     const { email, password } = req.body
     try{
-        const user = await db.collection("Accounts").findOne({email: email})
+        const user = await db.collection("Accounts").findOne({email})
         const token = uuidV4()
         await db.collection("sessions").insertOne({id: user._id, name: user.name, token})
         return res.send(token)
