@@ -6,13 +6,13 @@ const deposit = async(req, res) => {
     const {value, description} = req.body
     try{
         const account = await db.collection("Accounts").findOne({_id: id})
-        const cashIn = [...account.cashIn, {value, description, date: dayjs(Date.now()).format("DD/MM")}]
-        const saldo = Number(value) + account.saldo
+        const checkingAccount = [...account.checkingAccount, {_id: id, value, description, type: 'deposit', date: dayjs(Date.now()).format("DD/MM")}]
+        const balance = Number(value) + account.balance
         await db.collection("Accounts").updateOne({_id: id}, 
-            {$set: {cashIn, saldo}})
+            {$set: {checkingAccount, balance}})
         return res.sendStatus(200)
-    }catch{
-        return res.sendStatus(500)
+    }catch(error){
+        return res.status(500).send(error)
     }
 }
 
@@ -21,13 +21,13 @@ const withdraw = async(req, res) => {
     const {value, description} = req.body
     try{
         const account = await db.collection("Accounts").findOne({_id: id})
-        const cashOut = [...account.cashOut, {value, description, date: dayjs(Date.now()).format("DD/MM")}]
-        const saldo = account.saldo - Number(value)
+        const checkingAccount = [...account.checkingAccount, {id: id, value, description, type: 'withdraw', date: dayjs(Date.now()).format("DD/MM")}]
+        const balance =  account.balance - Number(value)
         await db.collection("Accounts").updateOne({_id: id}, 
-            {$set: {cashOut, saldo}})
+            {$set: {checkingAccount, balance}})
         return res.sendStatus(200)
-    }catch{
-        return res.sendStatus(500)
+    }catch(error){
+        return res.status(500).send(error)
     }
 }
 
@@ -38,9 +38,8 @@ const getInfomation = async(req, res) => {
         return res.status(200).send(
             {id: user._id, 
             name: user.name, 
-            cashIn: user.cashIn, 
-            cashOut: user.cashOut, 
-            saldo: user.saldo 
+            checkingAccount: user.checkingAccount,  
+            balance: user.balance 
         })
     }catch{
         return res.sendStatus(500)

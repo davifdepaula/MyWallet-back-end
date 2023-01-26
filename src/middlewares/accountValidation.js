@@ -15,7 +15,7 @@ const tokenValidation = async(req, res, next) => {
     }
 }
 
-const financialMovementValidation = (req, res, next) => {
+const financialMovimentValidation = (req, res, next) => {
     const validation = depositSchema.validate(req.body)
     if(validation.error) return res.status(400).send(`${validation.error.message}`)
     next()
@@ -23,5 +23,5 @@ const financialMovementValidation = (req, res, next) => {
 
 export{
     tokenValidation,
-    financialMovementValidation
+    financialMovimentValidation
 }
